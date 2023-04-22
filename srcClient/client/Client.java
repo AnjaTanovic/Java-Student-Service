@@ -25,6 +25,15 @@ public class Client extends javax.swing.JFrame {
         return br;
     }
     
+    public void loginSuccessful() {
+        labelRole.setVisible(false);
+        labelUsername.setVisible(false);
+        labelPassword.setVisible(false);
+        comboRole.setVisible(false);
+        textUsername.setVisible(false);
+        textPassword.setVisible(false);
+        buttonLogIn.setVisible(false);
+    }
     /**
      * Creates new form ClientGUI
      */
@@ -90,7 +99,7 @@ public class Client extends javax.swing.JFrame {
 
         labelPassword.setText("Password:");
 
-        comboRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrator", "Student" }));
+        comboRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin", "Student" }));
         comboRole.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboRoleActionPerformed(evt);
@@ -177,9 +186,9 @@ public class Client extends javax.swing.JFrame {
             this.pw = new PrintWriter(new OutputStreamWriter(this.socket.getOutputStream()), true);
             
             //Create new thread to recieve messagers from server
-            //this.reciever = new ReceiveMessageFromServer(this);
-            //Thread thr = new Thread(reciever);
-            //thr.start();
+            this.reciever = new ReceiveMessageFromServer(this);
+            Thread thr = new Thread(reciever);
+            thr.start();
             
             //enable next step
             buttonSignIn.setVisible(false);
@@ -217,22 +226,13 @@ public class Client extends javax.swing.JFrame {
         
         if (!this.textUsername.getText().equals("") && this.textPassword.getPassword().length != 0) {
             //create message role:user:password
-            String loginMessage = this.comboRole.getSelectedItem().toString() + ":" + this.textUsername.getText() + ":"
-                    + this.textPassword.getPassword();		
+            String loginMessage = this.textUsername.getText() + ":"
+                    + String.valueOf(this.textPassword.getPassword()) +  ":" 
+                    + this.comboRole.getSelectedItem().toString();		
             this.pw.println(loginMessage);
         } else {
             JOptionPane.showMessageDialog(null, "Insert username and password!");
         }
-        
-        /*
-        labelRole.setVisible(false);
-        labelUsername.setVisible(false);
-        labelPassword.setVisible(false);
-        comboRole.setVisible(false);
-        textUsername.setVisible(false);
-        textPassword.setVisible(false);
-        buttonLogIn.setVisible(false);
-        */
     }//GEN-LAST:event_buttonLogInActionPerformed
 
     /**

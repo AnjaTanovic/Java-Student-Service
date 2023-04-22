@@ -2,6 +2,7 @@ package server;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -25,6 +26,9 @@ public class ServeConnectedClient implements Runnable {
     private String userName;
     private String password;
     private String role;
+    
+    private int clientState;
+    //0 - signed in state, 1 - loged in state
     
     private final String users_txt = "D:\\Anja\\FAKULTET\\Master\\Razvoj softvera za embeded operativne sisteme\\NetBeans\\Zadaci\\2\\Java-Student-Service\\srcServer\\server\\users.txt";
     File users_file;
@@ -66,6 +70,7 @@ public class ServeConnectedClient implements Runnable {
             this.userName = "";
             this.password = "";
             this.role = "";
+            this.clientState = 0;
         } catch (IOException ex) {
             Logger.getLogger(ServeConnectedClient.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -80,13 +85,65 @@ public class ServeConnectedClient implements Runnable {
     
     @Override
     public void run() {
-        System.out.println("Run");
         
-        /*
         while(true) {
-            
+            switch (clientState) {
+                case 0:
+                    try {
+                        //check username and password
+                        String userInfo = this.br.readLine();
+                        String[] userPassRole = userInfo.split(":");
+                        if (userPassRole.length != 3) {
+                            System.out.println("User data is not in correct form!");
+                            System.exit(0);
+                        }
+                        else
+                        {
+                            //read user txt document
+                            String readString;
+                            BufferedReader usersBr = new BufferedReader(new FileReader(users_txt));
+                            while ((readString = usersBr.readLine()) != null) {
+                                String[] userPassRoleTxt = readString.split(":");
+                                if (userPassRoleTxt.length != 3) {
+                                    System.out.println("Text document for user data is not in correct form!");
+                                    System.exit(0);
+                                }
+                                if (userPassRoleTxt[0].equalsIgnoreCase(userPassRole[0]) 
+                                        && userPassRoleTxt[1].equals(userPassRole[1])
+                                        && userPassRoleTxt[2].equalsIgnoreCase(userPassRole[2])) {
+                                    clientState++;
+                                    this.pw.println("Correct");
+                                    System.out.println("Correct password.");
+                                    this.role = userPassRoleTxt[0];
+                                    this.userName = userPassRoleTxt[1];
+                                    this.password = userPassRoleTxt[2];
+                                    break;
+                                }
+                            }
+                            if (clientState == 0) {
+                                this.pw.println("Not correct");
+                                System.out.println("Not correct password.");
+                            }
+                        }
+                    }
+                    catch (IOException ex) {
+                        System.out.println("Disconnected user.");
+                        for (ServeConnectedClient cl : this.allClients) {
+                            if (cl.getUserName().equals(this.userName)) {
+                                this.allClients.remove(cl);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                case 1:
+                    break;
+                case 2: 
+                    break;
+                default:
+                    break;
+            }
         }
-        */
     }
     
     void updateClientStatus() {
