@@ -16,6 +16,8 @@ public class Server {
     private ServerSocket ssocket;
     private int port;
     private ArrayList<ServeConnectedClient> clients;
+    private ArrayList<Student> students;
+    private ArrayList<Course> courses;
 
     public ServerSocket getSsocket() {
         return ssocket;
@@ -35,6 +37,8 @@ public class Server {
 
     public Server(int port) {
         this.clients = new ArrayList<>();
+        this.students = new ArrayList<>();
+        this.courses = new ArrayList<>();
         try {
             this.port = port;
             this.ssocket = new ServerSocket(port);
@@ -59,7 +63,7 @@ public class Server {
             if (client != null) {
                 System.out.println("Client is successfully connected.");
                 //Create thread to serve client
-                ServeConnectedClient servedClient = new ServeConnectedClient(client, clients);
+                ServeConnectedClient servedClient = new ServeConnectedClient(client, clients, students, courses);
                 clients.add(servedClient);
                 thr = new Thread(servedClient);
                 thr.start();
