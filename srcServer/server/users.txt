@@ -1,1 +1,1 @@
-Main Admin:service123:admin
+MainAdmin:service123:admin

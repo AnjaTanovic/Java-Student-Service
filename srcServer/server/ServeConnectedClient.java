@@ -108,18 +108,19 @@ public class ServeConnectedClient implements Runnable {
                                     System.out.println("Text document for user data is not in correct form!");
                                     System.exit(0);
                                 }
-                                if (userPassRoleTxt[0].equalsIgnoreCase(userPassRole[0]) 
+                                if (userPassRoleTxt[0].equals(userPassRole[0]) 
                                         && userPassRoleTxt[1].equals(userPassRole[1])
                                         && userPassRoleTxt[2].equalsIgnoreCase(userPassRole[2])) {
                                     clientState++;
                                     this.pw.println("Correct");
                                     System.out.println("Correct password.");
-                                    this.role = userPassRoleTxt[0];
-                                    this.userName = userPassRoleTxt[1];
-                                    this.password = userPassRoleTxt[2];
+                                    this.userName = userPassRoleTxt[0];
+                                    this.password = userPassRoleTxt[1];
+                                    this.role = userPassRoleTxt[2];
                                     break;
                                 }
                             }
+                            usersBr.close();
                             if (clientState == 0) {
                                 this.pw.println("Not correct");
                                 System.out.println("Not correct password.");
@@ -131,7 +132,7 @@ public class ServeConnectedClient implements Runnable {
                         for (ServeConnectedClient cl : this.allClients) {
                             if (cl.getUserName().equals(this.userName)) {
                                 this.allClients.remove(cl);
-                                break;
+                                return;
                             }
                         }
                     }

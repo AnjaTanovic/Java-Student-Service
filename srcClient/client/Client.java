@@ -1,6 +1,8 @@
 package client;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -8,6 +10,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,19 +24,30 @@ public class Client extends javax.swing.JFrame {
     private PrintWriter pw;
     private ReceiveMessageFromServer reciever;
     
+    private String userName;
+    private String role;
+    
+    private String [] students;
+    private int numberOfStudents;
+    
+    private String [] courses;
+    private int numberOfCourses;
+    
+    private final String users_txt = "D:\\Anja\\FAKULTET\\Master\\Razvoj softvera za embeded operativne sisteme\\NetBeans\\Zadaci\\2\\Java-Student-Service\\srcServer\\server\\users.txt";
+    File users_file;
+    
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getRole() {
+        return role;
+    }
+    
     public BufferedReader getBr() {
         return br;
     }
-    
-    public void loginSuccessful() {
-        labelRole.setVisible(false);
-        labelUsername.setVisible(false);
-        labelPassword.setVisible(false);
-        comboRole.setVisible(false);
-        textUsername.setVisible(false);
-        textPassword.setVisible(false);
-        buttonLogIn.setVisible(false);
-    }
+ 
     /**
      * Creates new form ClientGUI
      */
@@ -48,6 +62,45 @@ public class Client extends javax.swing.JFrame {
         textUsername.setVisible(false);
         textPassword.setVisible(false);
         buttonLogIn.setVisible(false);
+        labelNotCorrect.setVisible(false);
+        
+        labelStudents.setVisible(false);
+        labelCourses.setVisible(false);
+        listStudents.setVisible(false);
+        listCourses.setVisible(false);
+        buttonAddStudent.setVisible(false);
+        buttonAddCourse.setVisible(false);
+        
+        this.students = new String[100];
+        this.numberOfStudents = 0;
+        this.courses = new String[100];
+        this.numberOfCourses = 0;
+    }
+    
+    public void loginSuccessful(boolean ok) {
+        if (ok) {
+            labelRole.setVisible(false);
+            labelUsername.setVisible(false);
+            labelPassword.setVisible(false);
+            comboRole.setVisible(false);
+            textUsername.setVisible(false);
+            textPassword.setVisible(false);
+            buttonLogIn.setVisible(false);
+            labelNotCorrect.setVisible(false);
+
+            if (this.role.equalsIgnoreCase("admin")){
+                labelStudents.setVisible(true);
+                labelCourses.setVisible(true);
+                listStudents.setVisible(true);
+                listCourses.setVisible(true); 
+                buttonAddStudent.setVisible(true);
+                buttonAddCourse.setVisible(true);
+            }
+        }
+        else
+        {
+            labelNotCorrect.setVisible(true);
+        }
     }
 
     /**
@@ -69,6 +122,15 @@ public class Client extends javax.swing.JFrame {
         labelRole = new javax.swing.JLabel();
         buttonLogIn = new javax.swing.JButton();
         labelNoConnection = new javax.swing.JLabel();
+        labelStudents = new javax.swing.JLabel();
+        labelCourses = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        listStudents = new javax.swing.JList<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        listCourses = new javax.swing.JList<>();
+        buttonAddStudent = new javax.swing.JButton();
+        buttonAddCourse = new javax.swing.JButton();
+        labelNotCorrect = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -118,35 +180,78 @@ public class Client extends javax.swing.JFrame {
         labelNoConnection.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelNoConnection.setText("Server is not available. Try again later.");
 
+        labelStudents.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelStudents.setText("Students:");
+
+        labelCourses.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelCourses.setText("Courses:");
+
+        jScrollPane1.setViewportView(listStudents);
+
+        jScrollPane2.setViewportView(listCourses);
+
+        buttonAddStudent.setText("Add Student");
+        buttonAddStudent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAddStudentActionPerformed(evt);
+            }
+        });
+
+        buttonAddCourse.setText("Add Course");
+        buttonAddCourse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAddCourseActionPerformed(evt);
+            }
+        });
+
+        labelNotCorrect.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelNotCorrect.setText("Username and password are not correct. Please try again.");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(242, 242, 242)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(84, 84, 84)
-                            .addComponent(buttonSignIn)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(labelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(textPassword))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(labelUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(labelRole, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(comboRole, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(textUsername)))
-                            .addComponent(buttonLogIn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)))
-                    .addComponent(labelWelcome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(labelNoConnection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(257, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(242, 242, 242)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(84, 84, 84)
+                                    .addComponent(buttonSignIn))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(labelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(textPassword))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(labelUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(labelRole, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(comboRole, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(textUsername)))
+                                    .addComponent(buttonLogIn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)))
+                            .addComponent(labelWelcome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(labelNoConnection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(labelStudents, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(buttonAddStudent, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE))
+                        .addGap(28, 28, 28)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(buttonAddCourse, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                            .addComponent(labelCourses, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 208, Short.MAX_VALUE)
+                .addComponent(labelNotCorrect, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(214, 214, 214))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,7 +276,20 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(labelPassword))
                 .addGap(18, 18, 18)
                 .addComponent(buttonLogIn)
-                .addContainerGap(138, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelNotCorrect)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelStudents)
+                    .addComponent(labelCourses))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE))
+                .addGap(13, 13, 13)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonAddStudent)
+                    .addComponent(buttonAddCourse)))
         );
 
         pack();
@@ -230,10 +348,57 @@ public class Client extends javax.swing.JFrame {
                     + String.valueOf(this.textPassword.getPassword()) +  ":" 
                     + this.comboRole.getSelectedItem().toString();		
             this.pw.println(loginMessage);
+            
+            this.role = this.comboRole.getSelectedItem().toString();
+            this.userName = this.textUsername.getText();
         } else {
             JOptionPane.showMessageDialog(null, "Insert username and password!");
         }
     }//GEN-LAST:event_buttonLogInActionPerformed
+
+    private void buttonAddStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddStudentActionPerformed
+        String newStudentFirstName = JOptionPane.showInputDialog("Enter student's first name:");
+        String newStudentLastName = JOptionPane.showInputDialog("Enter student's last name:");
+        String newStudentIndex = JOptionPane.showInputDialog("Enter student's index:");
+        String newStudentJMBG = JOptionPane.showInputDialog("Enter student's JMBG:");
+        String newStudentUsername = JOptionPane.showInputDialog("Enter username for student's new account:");
+        String newStudentPassword = JOptionPane.showInputDialog("Enter password for student's new account:");
+       
+        String newFileInfo = newStudentUsername + ":" + newStudentPassword + ":" + "student";
+        try {
+            PrintWriter usersPw = new PrintWriter(new FileWriter(users_txt,true));
+            usersPw.println(newFileInfo);
+            usersPw.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        if (numberOfStudents < 100) {
+            students[numberOfStudents] = newStudentFirstName + " " + newStudentLastName;
+            numberOfStudents++;
+        }
+        else {
+            System.out.println("More than 100 students");
+            System.exit(1);
+        }
+        
+        listStudents.setModel(new DefaultComboBoxModel<>(students));
+    }//GEN-LAST:event_buttonAddStudentActionPerformed
+
+    private void buttonAddCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddCourseActionPerformed
+        String newCourseName = JOptionPane.showInputDialog("Enter course's name:");
+       
+        if (numberOfCourses < 100) {
+            courses[numberOfCourses] = newCourseName;
+            numberOfCourses++;
+        }
+        else {
+            System.out.println("More than 100 courses");
+            System.exit(1);
+        }
+        
+        listCourses.setModel(new DefaultComboBoxModel<>(courses));
+    }//GEN-LAST:event_buttonAddCourseActionPerformed
 
     /**
      * @param args the command line arguments
@@ -274,14 +439,23 @@ public class Client extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonAddCourse;
+    private javax.swing.JButton buttonAddStudent;
     private javax.swing.JButton buttonLogIn;
     private javax.swing.JButton buttonSignIn;
     private javax.swing.JComboBox<String> comboRole;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel labelCourses;
     private javax.swing.JLabel labelNoConnection;
+    private javax.swing.JLabel labelNotCorrect;
     private javax.swing.JLabel labelPassword;
     private javax.swing.JLabel labelRole;
+    private javax.swing.JLabel labelStudents;
     private javax.swing.JLabel labelUsername;
     private javax.swing.JLabel labelWelcome;
+    private javax.swing.JList<String> listCourses;
+    private javax.swing.JList<String> listStudents;
     private javax.swing.JPasswordField textPassword;
     private javax.swing.JTextField textUsername;
     // End of variables declaration//GEN-END:variables

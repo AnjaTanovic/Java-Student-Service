@@ -25,9 +25,11 @@ public class ReceiveMessageFromServer implements Runnable{
             String serverMessage;
             try {
                 serverMessage = this.br.readLine();
-                System.out.println(serverMessage);
                 if (serverMessage.equals("Correct")) {
-                    parent.loginSuccessful();
+                    parent.loginSuccessful(true);
+                }
+                else {
+                    parent.loginSuccessful(false);
                 }
                //switch case or fsm for messages
             }
