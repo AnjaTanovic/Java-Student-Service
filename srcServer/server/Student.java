@@ -1,5 +1,7 @@
 package server;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Anja Tanovic
@@ -12,6 +14,7 @@ public class Student {
     private String lastName;
     private String jmbg;
     private String index;
+    private ArrayList<StudentsCourse> courses;
 
     public Student(String userName, String password, String firstName, String lastName, String jmbg, String index) {
         this.userName = userName;
@@ -20,6 +23,7 @@ public class Student {
         this.lastName = lastName;
         this.jmbg = jmbg;
         this.index = index;
+        this.courses = new ArrayList<>();
     }
 
     public String getIndex() {
@@ -70,5 +74,54 @@ public class Student {
         this.jmbg = jmbg;
     }
     
+    public void addCourse(Course course) {
+        courses.add(new StudentsCourse(course));
+    }
     
+    public void addPoints(Course course, String categoryName, int points) {
+        
+        for (StudentsCourse cr : courses) {
+            if (cr.getCourse().getName().equals(course.getName())) {
+                //get index of category
+                int index = -1;
+                for (int i = 0; i < course.getCategoriesNames().size(); i++) {
+                    if (categoryName.equals(course.getCategoriesNames().get(i))) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index != -1)
+                    cr.setCategoriesPoints(index, points);
+                else
+                    System.out.println("Wrong category name!!");
+                break;
+            }
+        }
+    }
+    
+    public int getCourseGrade(Course course) {
+        int grade = 0;
+        for (StudentsCourse cr : courses) {
+            if (cr.getCourse().getName().equals(course.getName())) {
+                grade = cr.getGrade();
+                break;
+            }
+        }
+        return grade;
+    }
+    
+    public String getCoursesInfo() {
+        String names = "";
+        for (int i = 0; i < courses.size(); i++) {
+            names += courses.get(i).getCourse().getName() + " -> ";
+                for (int j = 0; j < courses.get(i).getCourse().getCategoriesNames().size(); j++) {
+                    names += courses.get(i).getCourse().getCategoriesNames().get(j) + "-" 
+                            + courses.get(i).getCategoryPoints(j) + " ";
+                }
+            if (i < courses.size() - 1) {
+                names += ", ";
+            }
+        }
+        return names;
+    }
 }

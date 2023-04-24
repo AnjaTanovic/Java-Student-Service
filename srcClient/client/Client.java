@@ -57,10 +57,13 @@ public class Client extends javax.swing.JFrame {
         comboStudent.setVisible(false);
         comboCourse.setVisible(false);
         textStudent.setVisible(false);
+        textStudent.setEditable(false);
         textCourse.setVisible(false);
+        textCourse.setEditable(false);
         jScrollPane3.setVisible(false);
         jScrollPane4.setVisible(false);
         buttonAddStudent.setVisible(false);
+        buttonStudentCourse.setVisible(false);
         buttonAddCourse.setVisible(false);
         buttonAddAdmin.setVisible(false);
     }
@@ -78,6 +81,7 @@ public class Client extends javax.swing.JFrame {
 
             if (this.role.equalsIgnoreCase("admin")){
                 buttonAddStudent.setVisible(true);
+                buttonStudentCourse.setVisible(true);
                 buttonAddCourse.setVisible(true);
                 buttonAddAdmin.setVisible(true);
             }
@@ -150,6 +154,7 @@ public class Client extends javax.swing.JFrame {
         textStudent = new javax.swing.JTextArea();
         jScrollPane4 = new javax.swing.JScrollPane();
         textCourse = new javax.swing.JTextArea();
+        buttonStudentCourse = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -250,6 +255,13 @@ public class Client extends javax.swing.JFrame {
         jScrollPane4.setViewportView(textCourse);
         textCourse.getAccessibleContext().setAccessibleDescription("");
 
+        buttonStudentCourse.setText("Add a new course to the student");
+        buttonStudentCourse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonStudentCourseActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -279,22 +291,21 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(labelWelcome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(labelNoConnection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(129, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(comboStudent, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane3)
-                        .addComponent(labelStudents, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(buttonAddStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonAddAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(114, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(comboStudent, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(labelStudents, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonStudentCourse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonAddStudent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(buttonAddCourse, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(comboCourse, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(labelCourses, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(comboCourse, 0, 227, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                    .addComponent(labelCourses, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                    .addComponent(buttonAddCourse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonAddAdmin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(114, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -337,10 +348,12 @@ public class Client extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAddCourse)
+                    .addComponent(buttonStudentCourse))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonAddAdmin)
                     .addComponent(buttonAddStudent))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(buttonAddAdmin)
-                .addContainerGap())
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         pack();
@@ -516,6 +529,27 @@ public class Client extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_comboCourseActionPerformed
 
+    private void buttonStudentCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStudentCourseActionPerformed
+        if (comboStudent.getSelectedIndex() != -1) {
+            String newCourse = JOptionPane.showInputDialog("Enter full name of the new course for student:");
+
+            boolean correctName = false;
+            for (int i = 0; i < comboCourse.getItemCount(); i++) {
+                if (newCourse.equals(comboCourse.getSelectedItem().toString())) {
+                    correctName = true;
+                    break;
+                }
+            }
+            if (correctName) {
+                String message = "Add new Course:" + newCourse + ":for student:" + comboStudent.getSelectedItem().toString();
+                this.pw.println(message);
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Course \"" + newCourse + "\" does not exist! Try again.");
+            }
+        }
+    }//GEN-LAST:event_buttonStudentCourseActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -560,6 +594,7 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JButton buttonAddStudent;
     private javax.swing.JButton buttonLogIn;
     private javax.swing.JButton buttonSignIn;
+    private javax.swing.JButton buttonStudentCourse;
     private javax.swing.JComboBox<String> comboCourse;
     private javax.swing.JComboBox<String> comboRole;
     private javax.swing.JComboBox<String> comboStudent;

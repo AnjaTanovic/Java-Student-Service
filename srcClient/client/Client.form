@@ -57,25 +57,22 @@
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace pref="129" max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="comboStudent" max="32767" attributes="0"/>
-                      <Component id="jScrollPane3" max="32767" attributes="0"/>
-                      <Component id="labelStudents" min="-2" pref="226" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="buttonAddStudent" min="-2" pref="143" max="-2" attributes="0"/>
-                  <Component id="buttonAddAdmin" alignment="0" min="-2" pref="143" max="-2" attributes="0"/>
+          <Group type="102" attributes="0">
+              <EmptySpace pref="114" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="comboStudent" alignment="1" max="32767" attributes="0"/>
+                  <Component id="jScrollPane3" alignment="1" max="32767" attributes="0"/>
+                  <Component id="labelStudents" alignment="0" max="32767" attributes="0"/>
+                  <Component id="buttonStudentCourse" alignment="0" max="32767" attributes="0"/>
+                  <Component id="buttonAddStudent" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="buttonAddCourse" min="-2" pref="143" max="-2" attributes="0"/>
-                  <Group type="103" alignment="0" groupAlignment="0" attributes="0">
-                      <Component id="comboCourse" alignment="1" min="-2" pref="227" max="-2" attributes="0"/>
-                      <Component id="jScrollPane4" alignment="1" min="-2" pref="227" max="-2" attributes="0"/>
-                      <Component id="labelCourses" alignment="1" min="-2" pref="227" max="-2" attributes="0"/>
-                  </Group>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="comboCourse" alignment="0" pref="227" max="32767" attributes="0"/>
+                  <Component id="jScrollPane4" alignment="0" pref="227" max="32767" attributes="0"/>
+                  <Component id="labelCourses" alignment="0" pref="227" max="32767" attributes="0"/>
+                  <Component id="buttonAddCourse" alignment="0" max="32767" attributes="0"/>
+                  <Component id="buttonAddAdmin" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace pref="114" max="32767" attributes="0"/>
           </Group>
@@ -127,11 +124,14 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="buttonAddCourse" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="buttonStudentCourse" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="buttonAddAdmin" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="buttonAddStudent" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="buttonAddAdmin" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace pref="32" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -310,5 +310,13 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="buttonStudentCourse">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Add a new course to the student"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonStudentCourseActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>

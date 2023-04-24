@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author anjat
+ * @author Anja Tanovic
  */
 public class Course {
     

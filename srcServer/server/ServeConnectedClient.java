@@ -203,8 +203,7 @@ public class ServeConnectedClient implements Runnable {
                     try {
                         //New student
                         String clientMess = this.br.readLine();
-                        if (clientMess.equals("New student"))
-                        {
+                        if (clientMess.equals("New student")) {
                             String addStudentMess = this.br.readLine();
                             
                             String[] studentInfo = addStudentMess.split(":");
@@ -232,8 +231,8 @@ public class ServeConnectedClient implements Runnable {
                                 Logger.getLogger(ServeConnectedClient.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
-                        else if (clientMess.equals("New admin"))
-                        {
+                        //New admin
+                        else if (clientMess.equals("New admin")) {
                             String addAdminMess = this.br.readLine();
                             
                             String[] adminInfo = addAdminMess.split(":");
@@ -251,8 +250,8 @@ public class ServeConnectedClient implements Runnable {
                                 Logger.getLogger(ServeConnectedClient.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
-                        else if (clientMess.equals("New course"))
-                        {
+                        //New Course
+                        else if (clientMess.equals("New course")) {
                             String addCourseMess = this.br.readLine();
                             
                             String[] courseInfo = addCourseMess.split(":");
@@ -286,20 +285,23 @@ public class ServeConnectedClient implements Runnable {
                             
                             this.pw.println(allCourses);
                         }    
-                        else if (clientMess.startsWith("ComboStudent:")) 
-                        {
+                        //Send informations about student selected by combo box
+                        else if (clientMess.startsWith("ComboStudent:")) {
                             String[] comboStud = clientMess.split(":");
                             
                             String studentNameIndex = comboStud[1];
                             for (Student st : this.students) {
+                                String studentsCourses = st.getCoursesInfo();
+                                if (studentsCourses.equals(""))
+                                    studentsCourses = "No courses";
                                 if (studentNameIndex.equals(st.getFirstName() + " " + st.getLastName() + ", " + st.getIndex())) {
                                     this.pw.println("Student info#Name: " + st.getFirstName() + " " + st.getLastName() + 
-                                            "#Index: " + st.getIndex() + "#JMBG: " + st.getJmbg());
+                                            "#Index: " + st.getIndex() + "#JMBG: " + st.getJmbg() + "#Courses: " + studentsCourses);
                                 }
                             }
                         }
-                        else if (clientMess.startsWith("ComboCourse:")) 
-                        {
+                        //Send informations about course selected by combo box
+                        else if (clientMess.startsWith("ComboCourse:")) {
                             String[] comboCour = clientMess.split(":");
                             
                             String courseName = comboCour[1];
@@ -336,6 +338,35 @@ public class ServeConnectedClient implements Runnable {
                                             "#Points: " + points + "#Minimum points for each category: " + minPoints);
                                 }
                             }
+                        }
+                        //Add new course to students courses
+                        else if (clientMess.startsWith("Add new Course:")) {
+                            String[] courseStudent = clientMess.split(":");
+                            //Add new Course:newCourse:for student:comboStudent
+                            
+                            for (Student st : this.students) {
+                                if (courseStudent[3].equals(st.getFirstName() + " " + st.getLastName() + ", " + st.getIndex())) {
+                                    for (Course cr : this.courses) {
+                                        if (courseStudent[1].equals(cr.getName())) {
+                                            st.addCourse(cr);
+                                            break;
+                                        }
+                                    }
+                                break;    
+                                }
+                            }
+                            
+                            String studentNameIndex = courseStudent[3];
+                            for (Student st : this.students) {
+                                String studentsCourses = st.getCoursesInfo();
+                                if (studentsCourses.equals(""))
+                                    studentsCourses = "No courses";
+                                if (studentNameIndex.equals(st.getFirstName() + " " + st.getLastName() + ", " + st.getIndex())) {
+                                    this.pw.println("Student info#Name: " + st.getFirstName() + " " + st.getLastName() + 
+                                            "#Index: " + st.getIndex() + "#JMBG: " + st.getJmbg() + "#Courses: " + studentsCourses);
+                                }
+                            }
+                            
                         }
                     }
                     catch (IOException ex) {
