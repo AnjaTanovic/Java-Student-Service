@@ -255,7 +255,26 @@ public class ServeConnectedClient implements Runnable {
                         {
                             String addCourseMess = this.br.readLine();
                             
-                            Course crs = new Course(addCourseMess);
+                            String[] courseInfo = addCourseMess.split(":");
+                            //newCourseName:categoriesNames:categoriesPoints:categoriesMinPoints
+                            
+                            String[] categoryNames = courseInfo[1].split(",");
+                            ArrayList<String> catNames = new ArrayList<>();
+                            for (String categoryName : categoryNames) {
+                                catNames.add(categoryName.trim());
+                            }
+                            String[] categoryPoints = courseInfo[2].split(",");
+                            ArrayList<Integer> catPoints = new ArrayList<>();
+                            for (String points : categoryPoints) {
+                                catPoints.add(Integer.parseInt(points.trim()));
+                            }
+                            String[] categoryMinPoints = courseInfo[3].split(",");
+                            ArrayList<Integer> catMinPoints = new ArrayList<>();
+                            for (String points : categoryMinPoints) {
+                                catMinPoints.add(Integer.parseInt(points.trim()));
+                            }
+                            
+                            Course crs = new Course(courseInfo[0], catNames, catPoints, catMinPoints);
                             courses.add(crs);
                             
                             //send info to client
@@ -274,7 +293,7 @@ public class ServeConnectedClient implements Runnable {
                             String studentNameIndex = comboStud[1];
                             for (Student st : this.students) {
                                 if (studentNameIndex.equals(st.getFirstName() + " " + st.getLastName() + ", " + st.getIndex())) {
-                                    this.pw.println("Student info#Name:" + st.getFirstName() + " " + st.getLastName() + 
+                                    this.pw.println("Student info#Name: " + st.getFirstName() + " " + st.getLastName() + 
                                             "#Index: " + st.getIndex() + "#JMBG: " + st.getJmbg());
                                 }
                             }
@@ -286,7 +305,35 @@ public class ServeConnectedClient implements Runnable {
                             String courseName = comboCour[1];
                             for (Course cr : this.courses) {
                                 if (courseName.equals(cr.getName())) {
-                                    this.pw.println("Course info#Name:" + cr.getName());
+                                    String categories = "";
+                                    ArrayList<String> allCategories = cr.getCategoriesNames();
+                                    for (int i = 0; i < allCategories.size(); i++)
+                                    {
+                                        if (i < allCategories.size() - 1)
+                                            categories +=  allCategories.get(i) + ", ";
+                                        else
+                                            categories +=  allCategories.get(i);
+                                    }
+                                    String points = "";
+                                    ArrayList<Integer> allPoints = cr.getCategoriesPoints();
+                                    for (int i = 0; i < allPoints.size(); i++)
+                                    {
+                                        if (i < allPoints.size() - 1)
+                                            points +=  allPoints.get(i) + ", ";
+                                        else
+                                            points +=  allPoints.get(i);
+                                    }
+                                    String minPoints = "";
+                                    ArrayList<Integer> allMinPoints = cr.getMinPoints();
+                                    for (int i = 0; i < allMinPoints.size(); i++)
+                                    {
+                                        if (i < allMinPoints.size() - 1)
+                                            minPoints +=  allMinPoints.get(i) + ", ";
+                                        else
+                                            minPoints +=  allMinPoints.get(i);
+                                    }
+                                    this.pw.println("Course info#Name: " + cr.getName() + "#Categories: " + categories + 
+                                            "#Points: " + points + "#Minimum points for each category: " + minPoints);
                                 }
                             }
                         }

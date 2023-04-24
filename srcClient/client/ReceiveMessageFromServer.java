@@ -85,7 +85,7 @@ public class ReceiveMessageFromServer implements Runnable{
                         }
                         else if (serverMessage.startsWith("Course info#")){
                             String[] coursesInfo = serverMessage.split("#");
-                            String info = coursesInfo[1];
+                            String info = coursesInfo[1] + "\n" + coursesInfo[2] + "\n" +coursesInfo[3] + "\n" +coursesInfo[4];
                             parent.writeCourseInfo(info);
                         }
                     }
