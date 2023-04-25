@@ -50,7 +50,7 @@ public class EnterStudent extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("Index (for example E1/2018 or e2-2020) :");
+        jLabel6.setText("Index (E1, e1, E2, e2, E3 or e3; - or /; from 2000 to 2023; for example E1-2018) :");
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setText("Username for student:");

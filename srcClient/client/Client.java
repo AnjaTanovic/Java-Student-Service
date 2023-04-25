@@ -8,6 +8,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 /**
@@ -67,6 +69,7 @@ public class Client extends javax.swing.JFrame {
         jScrollPane4.setVisible(false);
         buttonAddStudent.setVisible(false);
         buttonStudentCourse.setVisible(false);
+        buttonGradeStudent.setVisible(false);
         buttonAddCourse.setVisible(false);
         buttonAddAdmin.setVisible(false); 
     }
@@ -85,6 +88,7 @@ public class Client extends javax.swing.JFrame {
             if (this.role.equalsIgnoreCase("admin")){
                 buttonAddStudent.setVisible(true);
                 buttonStudentCourse.setVisible(true);
+                buttonGradeStudent.setVisible(true);
                 buttonAddCourse.setVisible(true);
                 buttonAddAdmin.setVisible(true);
             }
@@ -135,6 +139,8 @@ public class Client extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         buttonSignIn = new javax.swing.JButton();
         labelWelcome = new javax.swing.JLabel();
         textPassword = new javax.swing.JPasswordField();
@@ -158,6 +164,11 @@ public class Client extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         textCourse = new javax.swing.JTextArea();
         buttonStudentCourse = new javax.swing.JButton();
+        buttonGradeStudent = new javax.swing.JButton();
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -265,6 +276,13 @@ public class Client extends javax.swing.JFrame {
             }
         });
 
+        buttonGradeStudent.setText("Grade Student");
+        buttonGradeStudent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonGradeStudentActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -301,7 +319,8 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(labelStudents, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(buttonStudentCourse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonAddStudent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(buttonAddStudent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonGradeStudent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(comboCourse, 0, 227, Short.MAX_VALUE)
@@ -336,7 +355,7 @@ public class Client extends javax.swing.JFrame {
                 .addComponent(buttonLogIn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelNotCorrect)
-                .addGap(50, 50, 50)
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelCourses, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(labelStudents))
@@ -355,8 +374,10 @@ public class Client extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAddAdmin)
-                    .addComponent(buttonAddStudent))
-                .addContainerGap(32, Short.MAX_VALUE))
+                    .addComponent(buttonGradeStudent))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonAddStudent)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -433,16 +454,44 @@ public class Client extends javax.swing.JFrame {
     public void finishedStudent() {
         boolean ok = true;
         
-        String newStudentFirstName = addStudent.textFirstName.getText();
-        String newStudentLastName = addStudent.textLastName.getText();
-        String newStudentIndex = addStudent.textIndex.getText();
-        String newStudentJMBG = addStudent.textJMGB.getText();
-        String newStudentUsername = addStudent.textUsername.getText();
-        String newStudentPassword = addStudent.textPassword.getText();
+        String newStudentFirstName = addStudent.textFirstName.getText().trim();
+        String newStudentLastName = addStudent.textLastName.getText().trim();
+        String newStudentIndex = addStudent.textIndex.getText().trim();
+        String newStudentJMBG = addStudent.textJMGB.getText().trim();
+        String newStudentUsername = addStudent.textUsername.getText().trim();
+        String newStudentPassword = addStudent.textPassword.getText().trim();
        
         if (newStudentFirstName.equals("") || newStudentLastName.equals("") || newStudentIndex.equals("") 
                 || newStudentJMBG.equals("") || newStudentUsername.equals("") || newStudentPassword.equals(""))
             ok = false;
+        else {
+            //check index format
+            Pattern indexPattern = Pattern.compile("^\\s*(E|e)([1-3])([/-])20(0[0-9]|1[0-9]|2[0-3])\\s*$");
+            Matcher matcher = indexPattern.matcher(newStudentIndex);
+            boolean matchFound = matcher.find();
+            if (!matchFound)
+                ok = false;
+            
+            //check jmbg format
+            Pattern jmbgPattern = Pattern.compile("^\\s*(0[1-9]|1[0-9]|2[0-9]|3[01])(0[1-9]|1[12])[0-9]{6}(9[0-9]{2}|0[01][0-9]|02[0-3])\\s*$");
+            matcher = jmbgPattern.matcher(newStudentJMBG);
+            matchFound = matcher.find();
+            if (!matchFound)
+                ok = false;
+            else {
+                String day = matcher.group(1);
+                String month = matcher.group(2);
+                if (Integer.parseInt(month) == 2 && Integer.parseInt(day) > 29) {
+                    ok = false;
+                }
+                //months with 30 days
+                if (Integer.parseInt(month) == 4 || Integer.parseInt(month) == 6 
+                        || Integer.parseInt(month) == 9 || Integer.parseInt(month) == 11) {
+                    if (Integer.parseInt(day) > 30)
+                        ok = false;
+                }
+            }
+        }
         
         if (ok) {
             addStudent.setVisible(false);
@@ -468,10 +517,10 @@ public class Client extends javax.swing.JFrame {
     public void finishedCourse() {
         boolean ok = true;
                 
-        String newCourseName = addCourse.textName.getText();
+        String newCourseName = addCourse.textName.getText().trim();
         if (newCourseName.equals(""))
             ok = false;
-        String newCourseNumber = addCourse.textCatNum.getText();
+        String newCourseNumber = addCourse.textCatNum.getText().trim();
         int courseNum = -1;
         try {
             courseNum = Integer.parseInt(newCourseNumber);
@@ -608,6 +657,10 @@ public class Client extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_buttonStudentCourseActionPerformed
 
+    private void buttonGradeStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGradeStudentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonGradeStudentActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -650,14 +703,17 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JButton buttonAddAdmin;
     public static javax.swing.JButton buttonAddCourse;
     private javax.swing.JButton buttonAddStudent;
+    private javax.swing.JButton buttonGradeStudent;
     private javax.swing.JButton buttonLogIn;
     private javax.swing.JButton buttonSignIn;
     private javax.swing.JButton buttonStudentCourse;
     private javax.swing.JComboBox<String> comboCourse;
     private javax.swing.JComboBox<String> comboRole;
     private javax.swing.JComboBox<String> comboStudent;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel labelCourses;
     private javax.swing.JLabel labelNoConnection;
     private javax.swing.JLabel labelNotCorrect;

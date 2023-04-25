@@ -118,6 +118,7 @@ public class Student {
                     names += courses.get(i).getCourse().getCategoriesNames().get(j) + "-" 
                             + courses.get(i).getCategoryPoints(j) + " ";
                 }
+            names += "grade = " + courses.get(i).getGrade();
             if (i < courses.size() - 1) {
                 names += ", ";
             }
