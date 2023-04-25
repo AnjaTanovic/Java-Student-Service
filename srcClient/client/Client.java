@@ -24,6 +24,9 @@ public class Client extends javax.swing.JFrame {
     private String userName;
     private String role;
     
+    EnterCourse addCourse;
+    EnterStudent addStudent;
+    
     public String getUserName() {
         return userName;
     }
@@ -65,7 +68,7 @@ public class Client extends javax.swing.JFrame {
         buttonAddStudent.setVisible(false);
         buttonStudentCourse.setVisible(false);
         buttonAddCourse.setVisible(false);
-        buttonAddAdmin.setVisible(false);
+        buttonAddAdmin.setVisible(false); 
     }
     
     public void loginSuccessful(boolean ok) {
@@ -422,16 +425,28 @@ public class Client extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonLogInActionPerformed
 
     private void buttonAddStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddStudentActionPerformed
+        //create new window
+        addStudent = new EnterStudent(this);
+        addStudent.setVisible(true);
+    }//GEN-LAST:event_buttonAddStudentActionPerformed
+
+    public void finishedStudent() {
+        boolean ok = true;
         
-        String newStudentFirstName = JOptionPane.showInputDialog("Enter student's first name:");
-        String newStudentLastName = JOptionPane.showInputDialog("Enter student's last name:");
-        String newStudentIndex = JOptionPane.showInputDialog("Enter student's index:");
-        String newStudentJMBG = JOptionPane.showInputDialog("Enter student's JMBG:");
-        String newStudentUsername = JOptionPane.showInputDialog("Enter username for student's new account:");
-        String newStudentPassword = JOptionPane.showInputDialog("Enter password for student's new account:");
+        String newStudentFirstName = addStudent.textFirstName.getText();
+        String newStudentLastName = addStudent.textLastName.getText();
+        String newStudentIndex = addStudent.textIndex.getText();
+        String newStudentJMBG = addStudent.textJMGB.getText();
+        String newStudentUsername = addStudent.textUsername.getText();
+        String newStudentPassword = addStudent.textPassword.getText();
        
-        if (!newStudentFirstName.equals("") && !newStudentLastName.equals("") && !newStudentIndex.equals("") 
-                && !newStudentJMBG.equals("") && !newStudentUsername.equals("") && !newStudentPassword.equals("")) {
+        if (newStudentFirstName.equals("") || newStudentLastName.equals("") || newStudentIndex.equals("") 
+                || newStudentJMBG.equals("") || newStudentUsername.equals("") || newStudentPassword.equals(""))
+            ok = false;
+        
+        if (ok) {
+            addStudent.setVisible(false);
+            
             String message1 = "New student";
             String message2 = newStudentFirstName + ":" + newStudentLastName + ":" + newStudentIndex + ":" 
                     + newStudentJMBG + ":" + newStudentUsername + ":" + newStudentPassword;
@@ -439,64 +454,107 @@ public class Client extends javax.swing.JFrame {
             this.pw.println(message2);
         }
         else {
-            JOptionPane.showMessageDialog(null, "Student information is not complete! Try again.");
+            addStudent.tryAgain();
         }
-    }//GEN-LAST:event_buttonAddStudentActionPerformed
-
-    private void buttonAddCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddCourseActionPerformed
         
-        String newCourseName = JOptionPane.showInputDialog("Enter course's name:");
-        int courseNum = 0;
-        while(courseNum <= 0) {
-            String newCourseNumber = JOptionPane.showInputDialog("Enter number of categories in course:");
-            try {
-                courseNum = Integer.parseInt(newCourseNumber);
-            }
-            catch (NumberFormatException nfe) {
-                JOptionPane.showMessageDialog(null, "Number is not in correct format! Try again.");
-            }
+    }
+    
+    private void buttonAddCourseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddCourseActionPerformed
+        //create new window
+        addCourse = new EnterCourse(this);
+        addCourse.setVisible(true);
+    }//GEN-LAST:event_buttonAddCourseActionPerformed
+
+    public void finishedCourse() {
+        boolean ok = true;
+                
+        String newCourseName = addCourse.textName.getText();
+        if (newCourseName.equals(""))
+            ok = false;
+        String newCourseNumber = addCourse.textCatNum.getText();
+        int courseNum = -1;
+        try {
+            courseNum = Integer.parseInt(newCourseNumber);
+            if (courseNum < 1)
+                ok = false;
+        }
+        catch (NumberFormatException nfe) {
+            ok = false;
         }
         String[] categoriesN;
-        String categoriesNames;
-        do {
-            categoriesNames = JOptionPane.showInputDialog("Enter names of categories in following format: name1, name2, name3 ...");
-            categoriesN = categoriesNames.split(",");
-            if (categoriesN.length != courseNum)
-                JOptionPane.showMessageDialog(null, "Categories are not in correct format! Try again.");
+        String categoriesNames = addCourse.textCatNames.getText();
+        categoriesN = categoriesNames.split(",");
+        if (categoriesN.length != courseNum) {
+            ok = false;
         }
-        while (categoriesN.length != courseNum);
-        
         String[] categoriesP;
-        String categoriesPoints;
-        do {
-            categoriesPoints = JOptionPane.showInputDialog("Enter points of categories in following format: points1, points2, points3 ...");
-            categoriesP = categoriesPoints.split(",");
-            if (categoriesP.length != courseNum)
-                JOptionPane.showMessageDialog(null, "Points are not in correct format! Try again.");
-        }
-        while (categoriesP.length != courseNum);
-        
+        String categoriesPoints = addCourse.textCatPoints.getText();
+        categoriesP = categoriesPoints.split(",");
+        if (categoriesP.length != courseNum) {
+            ok = false;
+        }     
         String[] categoriesMP;
-        String categoriesMinPoints;
-        do {
-            categoriesMinPoints = JOptionPane.showInputDialog("Enter the minimum number of points to pass the course for each category in following format: points1, points2, points3 ...");
-            categoriesMP = categoriesMinPoints.split(",");
-            if (categoriesMP.length != courseNum)
-                JOptionPane.showMessageDialog(null, "Minimum points are not in correct format! Try again.");
-        }
-        while (categoriesMP.length != courseNum);
+        String categoriesMinPoints = addCourse.textCatMinPoints.getText();
+        categoriesMP = categoriesMinPoints.split(",");
+        if (categoriesMP.length != courseNum) {
+            ok = false;
+        }   
         
-        if (!newCourseName.equals("")) {
+        //check if sum is 100
+        //check if min points are bigger than points
+        //check if sum of min points is bigger then 50
+        int sum = 0;
+        int sumMin = 0;
+        boolean bigger = false;
+        for (int i = 0; i < categoriesP.length; i++) {
+            try {
+                int num = Integer.parseInt(categoriesP[i].trim());
+                sum += num;
+                
+                int numMin = Integer.parseInt(categoriesMP[i].trim());
+                if (numMin > num) {
+                    ok = false;
+                    bigger = true;
+                }
+                sumMin += numMin;
+            }
+            catch (NumberFormatException nfe) {
+                ok = false;
+                break;
+            }
+        }
+        if (sum != 100) {
+            ok = false;
+            addCourse.labelPoints.setVisible(true);
+        }
+        else 
+            addCourse.labelPoints.setVisible(false);
+        if (bigger) {
+            ok = false;
+            addCourse.labelMinPoints.setVisible(true);
+        }
+        else
+            addCourse.labelMinPoints.setVisible(false);
+        if (sumMin < 51) {
+            ok = false;
+            addCourse.labelMinPointsSum.setVisible(true);
+        }
+        else 
+            addCourse.labelMinPointsSum.setVisible(false);
+        
+        if (ok) {
+            addCourse.setVisible(false);
+            
             String message1 = "New course";
             String message2 = newCourseName + ":" + categoriesNames + ":" + categoriesPoints + ":" + categoriesMinPoints;  
             this.pw.println(message1);
             this.pw.println(message2);
         }
         else {
-            JOptionPane.showMessageDialog(null, "Course information is not complete! Try again.");
+            addCourse.tryAgain();
         }
-    }//GEN-LAST:event_buttonAddCourseActionPerformed
-
+    }
+    
     private void buttonAddAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddAdminActionPerformed
         
         String newAdminUsername = JOptionPane.showInputDialog("Enter username for student's new account:");
@@ -512,7 +570,7 @@ public class Client extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Student information is not complete! Try again.");
         }
     }//GEN-LAST:event_buttonAddAdminActionPerformed
-
+   
     private void comboStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboStudentActionPerformed
         //get info about chosen student
         if (comboStudent.getSelectedIndex() != -1) {
@@ -535,7 +593,7 @@ public class Client extends javax.swing.JFrame {
 
             boolean correctName = false;
             for (int i = 0; i < comboCourse.getItemCount(); i++) {
-                if (newCourse.equals(comboCourse.getSelectedItem().toString())) {
+                if (newCourse.equals(comboCourse.getItemAt(i).toString())) {
                     correctName = true;
                     break;
                 }
@@ -590,7 +648,7 @@ public class Client extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAddAdmin;
-    private javax.swing.JButton buttonAddCourse;
+    public static javax.swing.JButton buttonAddCourse;
     private javax.swing.JButton buttonAddStudent;
     private javax.swing.JButton buttonLogIn;
     private javax.swing.JButton buttonSignIn;
