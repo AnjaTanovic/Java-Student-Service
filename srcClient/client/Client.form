@@ -42,7 +42,28 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="labelNotCorrect" max="32767" attributes="0"/>
           <Group type="102" attributes="0">
-              <EmptySpace min="-2" pref="242" max="-2" attributes="0"/>
+              <EmptySpace pref="45" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="labelStudentInfo" max="32767" attributes="0"/>
+                  <Component id="labelStudents" alignment="0" max="32767" attributes="0"/>
+                  <Component id="comboStudent" alignment="0" max="32767" attributes="0"/>
+                  <Component id="buttonAddStudent" alignment="0" max="32767" attributes="0"/>
+                  <Component id="buttonGradeStudent" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jScrollPane3" alignment="0" pref="325" max="32767" attributes="0"/>
+                  <Component id="buttonStudentCourse" alignment="0" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="jScrollPane4" pref="284" max="32767" attributes="0"/>
+                  <Component id="comboCourse" alignment="1" max="32767" attributes="0"/>
+                  <Component id="buttonAddCourse" alignment="1" max="32767" attributes="0"/>
+                  <Component id="buttonAddAdmin" alignment="1" max="32767" attributes="0"/>
+                  <Component id="labelCourses" alignment="1" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace pref="47" max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Group type="103" alignment="0" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
@@ -74,26 +95,10 @@
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
-          <Group type="102" attributes="0">
-              <EmptySpace pref="114" max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                  <Component id="labelStudentInfo" max="32767" attributes="0"/>
-                  <Component id="comboStudent" alignment="1" max="32767" attributes="0"/>
-                  <Component id="jScrollPane3" alignment="1" max="32767" attributes="0"/>
-                  <Component id="buttonStudentCourse" alignment="0" max="32767" attributes="0"/>
-                  <Component id="buttonAddStudent" alignment="0" max="32767" attributes="0"/>
-                  <Component id="buttonGradeStudent" alignment="0" max="32767" attributes="0"/>
-                  <Component id="labelStudents" alignment="0" max="32767" attributes="0"/>
-              </Group>
-              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="comboCourse" alignment="0" pref="227" max="32767" attributes="0"/>
-                  <Component id="jScrollPane4" alignment="0" pref="227" max="32767" attributes="0"/>
-                  <Component id="labelCourses" alignment="0" pref="227" max="32767" attributes="0"/>
-                  <Component id="buttonAddCourse" alignment="0" max="32767" attributes="0"/>
-                  <Component id="buttonAddAdmin" alignment="0" max="32767" attributes="0"/>
-              </Group>
-              <EmptySpace pref="114" max="32767" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="buttonLogOut" min="-2" pref="173" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -154,7 +159,9 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="buttonAddStudent" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="18" max="32767" attributes="0"/>
+              <Component id="buttonLogOut" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -354,9 +361,20 @@
     </Component>
     <Component class="javax.swing.JLabel" name="labelStudentInfo">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Segoe UI" size="12" style="1"/>
+        </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="Student Info:"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="buttonLogOut">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Log out"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonLogOutActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

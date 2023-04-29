@@ -73,6 +73,7 @@ public class Client extends javax.swing.JFrame {
         buttonGradeStudent.setVisible(false);
         buttonAddCourse.setVisible(false);
         buttonAddAdmin.setVisible(false); 
+        buttonLogOut.setVisible(false);
     }
     
     public void loginSuccessful(boolean ok) {
@@ -86,7 +87,7 @@ public class Client extends javax.swing.JFrame {
             buttonLogIn.setVisible(false);
             labelNotCorrect.setVisible(false);
 
-            if (this.role.equalsIgnoreCase("admin")){
+            if (this.role.equals("Admin")){
                 buttonAddStudent.setVisible(true);
                 buttonStudentCourse.setVisible(true);
                 buttonGradeStudent.setVisible(true);
@@ -100,11 +101,15 @@ public class Client extends javax.swing.JFrame {
                 textCourse.setVisible(true);
                 jScrollPane3.setVisible(true);
                 jScrollPane4.setVisible(true);
+                buttonLogOut.setVisible(true);
             }
             else {
                 labelStudentInfo.setVisible(true);
                 textStudent.setVisible(true);
                 jScrollPane3.setVisible(true);
+                buttonLogOut.setVisible(true);
+                
+                this.pw.println("GetInfo:" + this.userName);
             }
             
         }
@@ -136,6 +141,39 @@ public class Client extends javax.swing.JFrame {
         textCourse.setText(info);
     }
     
+    public boolean checkCurrentStudentIndex(String index) {
+        boolean eq;
+        
+        if (this.role.equals("Admin")) {
+            String[] nameIndex = comboStudent.getSelectedItem().toString().split(",");
+            if (index.equals(nameIndex[1].trim()))
+                eq = true;
+            else
+                eq = false;
+        }
+        else {
+            if (textStudent.getText().contains(index) || textStudent.getText().equals(""))
+            eq = true;
+        else
+            eq = false;
+        }
+        
+        return eq;
+    }
+    
+    public boolean checkCurrentCourseName(String name) {
+        boolean eq;
+        if (name.equals(comboCourse.getSelectedItem().toString()))
+            eq = true;
+        else
+            eq = false;
+        
+        return eq;
+    }
+    
+    public void printMess(String mess) {
+        JOptionPane.showMessageDialog(null, mess);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -172,6 +210,7 @@ public class Client extends javax.swing.JFrame {
         buttonStudentCourse = new javax.swing.JButton();
         buttonGradeStudent = new javax.swing.JButton();
         labelStudentInfo = new javax.swing.JLabel();
+        buttonLogOut = new javax.swing.JButton();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -290,8 +329,16 @@ public class Client extends javax.swing.JFrame {
             }
         });
 
+        labelStudentInfo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         labelStudentInfo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelStudentInfo.setText("Student Info:");
+
+        buttonLogOut.setText("Log out");
+        buttonLogOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonLogOutActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -299,7 +346,25 @@ public class Client extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(labelNotCorrect, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(242, 242, 242)
+                .addContainerGap(45, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(labelStudentInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelStudents, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(comboStudent, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonAddStudent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonGradeStudent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
+                    .addComponent(buttonStudentCourse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
+                    .addComponent(comboCourse, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonAddCourse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonAddAdmin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelCourses, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(47, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
@@ -322,24 +387,10 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(labelWelcome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(labelNoConnection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(114, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(labelStudentInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(comboStudent, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3)
-                    .addComponent(buttonStudentCourse, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonAddStudent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonGradeStudent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(labelStudents, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(comboCourse, 0, 227, Short.MAX_VALUE)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
-                    .addComponent(labelCourses, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
-                    .addComponent(buttonAddCourse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonAddAdmin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(114, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(buttonLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -390,7 +441,9 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(buttonGradeStudent))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonAddStudent)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addComponent(buttonLogOut)
+                .addContainerGap())
         );
 
         pack();
@@ -424,7 +477,6 @@ public class Client extends javax.swing.JFrame {
         } 
         catch (IOException ex) 
         {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             labelNoConnection.setVisible(true);
         }        
     }//GEN-LAST:event_buttonSignInActionPerformed
@@ -549,6 +601,15 @@ public class Client extends javax.swing.JFrame {
         if (categoriesN.length != courseNum) {
             ok = false;
         }
+        //check if categories have equal names
+        for (int i = 0; i < categoriesN.length - 1; i++) {
+            for (int j = i + 1; j < categoriesN.length; j++) {
+                if (categoriesN[i].trim().equals(categoriesN[j].trim())) {
+                    ok = false;
+                    break;
+                }
+            }
+        }
         String[] categoriesP;
         String categoriesPoints = addCourse.textCatPoints.getText();
         categoriesP = categoriesPoints.split(",");
@@ -568,17 +629,22 @@ public class Client extends javax.swing.JFrame {
         int sum = 0;
         int sumMin = 0;
         boolean bigger = false;
+        
         for (int i = 0; i < categoriesP.length; i++) {
             try {
                 int num = Integer.parseInt(categoriesP[i].trim());
                 sum += num;
                 
-                int numMin = Integer.parseInt(categoriesMP[i].trim());
-                if (numMin > num) {
-                    ok = false;
-                    bigger = true;
+                if (categoriesP.length == categoriesMP.length) {
+                    int numMin = Integer.parseInt(categoriesMP[i].trim());
+                    if (numMin > num) {
+                        ok = false;
+                        bigger = true;
+                    }
+                    sumMin += numMin;
                 }
-                sumMin += numMin;
+                else 
+                    bigger = true;
             }
             catch (NumberFormatException nfe) {
                 ok = false;
@@ -725,6 +791,10 @@ public class Client extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_buttonGradeStudentActionPerformed
 
+    private void buttonLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLogOutActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonLogOutActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -769,6 +839,7 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JButton buttonAddStudent;
     private javax.swing.JButton buttonGradeStudent;
     private javax.swing.JButton buttonLogIn;
+    private javax.swing.JButton buttonLogOut;
     private javax.swing.JButton buttonSignIn;
     private javax.swing.JButton buttonStudentCourse;
     private javax.swing.JComboBox<String> comboCourse;

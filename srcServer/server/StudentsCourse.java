@@ -1,5 +1,7 @@
 package server;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Anja Tanovic
@@ -54,17 +56,30 @@ public class StudentsCourse {
     
     public void calculateGrade() {
         int sum = sumPoints();
-        if (sum < 51)
-            this.grade = 5;
-        else if (sum < 61)
-            this.grade = 6;
-        else if (sum < 71)
-            this.grade = 7;
-        else if (sum < 81)
-            this.grade = 8;
-        else if (sum < 91)
-            this.grade = 9;
+        boolean pass = true;
+        //check all categories and their minimums
+        ArrayList<Integer> minPoints = course.getMinPoints();
+        for (int i = 0; i < categoriesPoints.length; i++) {
+            if (categoriesPoints[i] < minPoints.get(i)) {
+                pass = false;
+                break;
+            }
+        }
+        if (pass) {
+            if (sum < 51)
+                this.grade = 5;
+            else if (sum < 61)
+                this.grade = 6;
+            else if (sum < 71)
+                this.grade = 7;
+            else if (sum < 81)
+                this.grade = 8;
+            else if (sum < 91)
+                this.grade = 9;
+            else
+                this.grade = 10;
+        }
         else
-            this.grade = 10;
+            this.grade = 5;
     }
 }

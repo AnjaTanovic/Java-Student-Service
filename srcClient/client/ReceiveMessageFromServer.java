@@ -49,7 +49,10 @@ public class ReceiveMessageFromServer implements Runnable{
                                     comboInfo[i] = coursesInfo[i+1];
                                 parent.updateCourses(comboInfo);
                             }
-                            clientState++;
+                            if (parent.getRole().equals("Admin")) 
+                                clientState = 1;
+                            else  
+                                clientState = 2;
                         }
                         else {
                             parent.loginSuccessful(false);
@@ -57,7 +60,9 @@ public class ReceiveMessageFromServer implements Runnable{
                     }
                     catch (IOException ex) {
                         System.out.println("Server not available.");
-                        Logger.getLogger(ReceiveMessageFromServer.class.getName()).log(Level.SEVERE, null, ex);
+                        parent.printMess("Server is not available anymore!");
+                        System.out.println("BACK TO SIGN IN PAGE");
+                        return;
                     }
                     break;
                 case 1:
@@ -72,14 +77,20 @@ public class ReceiveMessageFromServer implements Runnable{
                             parent.updateStudents(comboInfo);
                         }
                         else if (serverMessage.startsWith("Student info#")){
+                            
                             String[] studentsInfo = serverMessage.split("#");
-                            String[] coursesInfo = studentsInfo[5].split(":");
-                            String infoCourse = "";
-                            for (int i = 0; i< coursesInfo.length; i++) {
-                                infoCourse += " \n" + coursesInfo[i];
+                            String[] studentIndex = studentsInfo[2].split(":");
+                            
+                            //update text only if this student is selected
+                            if (parent.checkCurrentStudentIndex(studentIndex[1].trim())) {
+                                String[] coursesInfo = studentsInfo[5].split(":");
+                                String infoCourse = "";
+                                for (int i = 0; i< coursesInfo.length; i++) {
+                                    infoCourse += " \n" + coursesInfo[i];
+                                }
+                                String info = studentsInfo[1] + "\n" + studentsInfo[2] + "\n" + studentsInfo[3] + "\n" + studentsInfo[4] + infoCourse;
+                                parent.writeStudentInfo(info);
                             }
-                            String info = studentsInfo[1] + "\n" + studentsInfo[2] + "\n" + studentsInfo[3] + "\n" + studentsInfo[4] + infoCourse;
-                            parent.writeStudentInfo(info);
                         }
                         else if (serverMessage.startsWith("New Course")) {
                             String[] coursesInfo = serverMessage.split(":");
@@ -90,13 +101,54 @@ public class ReceiveMessageFromServer implements Runnable{
                         }
                         else if (serverMessage.startsWith("Course info#")){
                             String[] coursesInfo = serverMessage.split("#");
-                            String info = coursesInfo[1] + "\n" + coursesInfo[2] + "\n" +coursesInfo[3] + "\n" +coursesInfo[4];
-                            parent.writeCourseInfo(info);
+                            String[] coursesName = coursesInfo[1].split(":");
+                            
+                            //update text only if this course is selected
+                            if (parent.checkCurrentCourseName(coursesName[1].trim())) {
+                                String info = coursesInfo[1] + "\n" + coursesInfo[2] + "\n" +coursesInfo[3] + "\n" +coursesInfo[4];
+                                parent.writeCourseInfo(info);
+                            }
+                        }
+                        else if (serverMessage.startsWith("Error:")){
+                            String[] mess = serverMessage.split(":");
+                            parent.printMess(mess[1]);
                         }
                     }
                     catch (IOException ex) {
                         System.out.println("Server not available.");
-                        Logger.getLogger(ReceiveMessageFromServer.class.getName()).log(Level.SEVERE, null, ex);
+                        parent.printMess("Server is not available anymore!");
+                        System.out.println("BACK TO SIGN IN PAGE");
+                        return;
+                    }
+                    break;
+                case 2:
+                    try {
+                        //get informations about currect user
+                        serverMessage = this.br.readLine();
+                        if (serverMessage.startsWith("Student info#")){
+                            String[] studentsInfo = serverMessage.split("#");
+                            
+                            //update text only if this student is selected
+                            if (parent.checkCurrentStudentIndex(studentsInfo[2])) {
+                                String[] coursesInfo = studentsInfo[5].split(":");
+                                String infoCourse = "";
+                                for (int i = 0; i< coursesInfo.length; i++) {
+                                    infoCourse += " \n" + coursesInfo[i];
+                                }
+                                String info = studentsInfo[1] + "\n" + studentsInfo[2] + "\n" + studentsInfo[3] + "\n" + studentsInfo[4] + infoCourse;
+                                parent.writeStudentInfo(info);
+                            }
+                        }
+                        else if (serverMessage.startsWith("Error:")){
+                            String[] mess = serverMessage.split(":");
+                            parent.printMess(mess[1]);
+                        }
+                    }
+                    catch (IOException ex) {
+                        System.out.println("Server not available.");
+                        parent.printMess("Server is not available anymore!");
+                        System.out.println("BACK TO SIGN IN PAGE");
+                        return;
                     }
                     break;
                 default:
