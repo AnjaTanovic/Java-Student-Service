@@ -293,10 +293,10 @@ public class ServeConnectedClient implements Runnable {
                             for (Student st : this.students) {
                                 String studentsCourses = st.getCoursesInfo();
                                 if (studentsCourses.equals(""))
-                                    studentsCourses = "No courses";
+                                    studentsCourses = "* No courses";
                                 if (studentNameIndex.equals(st.getFirstName() + " " + st.getLastName() + ", " + st.getIndex())) {
                                     this.pw.println("Student info#Name: " + st.getFirstName() + " " + st.getLastName() + 
-                                            "#Index: " + st.getIndex() + "#JMBG: " + st.getJmbg() + "#Courses: " + studentsCourses);
+                                            "#Index: " + st.getIndex() + "#JMBG: " + st.getJmbg() + "#Courses:#" + studentsCourses);
                                 }
                             }
                         }
@@ -347,8 +347,26 @@ public class ServeConnectedClient implements Runnable {
                             for (Student st : this.students) {
                                 if (courseStudent[3].equals(st.getFirstName() + " " + st.getLastName() + ", " + st.getIndex())) {
                                     for (Course cr : this.courses) {
+                                        //find course to add
                                         if (courseStudent[1].equals(cr.getName())) {
-                                            st.addCourse(cr);
+                                            //check if this course is already in students courses
+                                            ArrayList<String> studCourses = st.getCourses();
+                                            System.out.println(studCourses);
+                                            if (studCourses.isEmpty()) {
+                                                    st.addCourse(cr);
+                                                    System.out.println("New course for student");
+                                                }
+                                                
+                                            for (int i = 0; i < studCourses.size(); i++) {
+                                                if (studCourses.get(i).equals(courseStudent[1])) {
+                                                    System.out.println("Course already in students courses");
+                                                    break;
+                                                }
+                                                if (i == studCourses.size() - 1) {
+                                                    st.addCourse(cr);
+                                                    System.out.println("New course for student");
+                                                }
+                                            }
                                             break;
                                         }
                                     }
@@ -360,13 +378,60 @@ public class ServeConnectedClient implements Runnable {
                             for (Student st : this.students) {
                                 String studentsCourses = st.getCoursesInfo();
                                 if (studentsCourses.equals(""))
-                                    studentsCourses = "No courses";
+                                    studentsCourses = "* No courses";
                                 if (studentNameIndex.equals(st.getFirstName() + " " + st.getLastName() + ", " + st.getIndex())) {
                                     this.pw.println("Student info#Name: " + st.getFirstName() + " " + st.getLastName() + 
-                                            "#Index: " + st.getIndex() + "#JMBG: " + st.getJmbg() + "#Courses: " + studentsCourses);
+                                            "#Index: " + st.getIndex() + "#JMBG: " + st.getJmbg() + "#Courses:#" + studentsCourses);
                                 }
                             }
                             
+                        }
+                        //Grade student
+                        else if (clientMess.startsWith("Grade:")) {
+                            //Grade:comboStudent:courseToGrade:categoryToGrade:studentPoints
+                            String[] gradeStud = clientMess.split(":");
+                            int points = Integer.parseInt(gradeStud[4]);
+                            
+                            boolean correctGrade = false;
+                            //check if course category exists and check if number 
+                            //of points are < or == then number of points in category
+                            Course chosenCourse = new Course(null, null, null, null);
+                            for (Course cr : this.courses) {
+                                if (gradeStud[2].equals(cr.getName())) {
+                                    chosenCourse = cr;
+                                    ArrayList<String> catNames = cr.getCategoriesNames();
+                                    ArrayList<Integer> catPoints = cr.getCategoriesPoints();
+                                    for (int i = 0; i < catNames.size(); i++) {
+                                        if (catNames.get(i).equals(gradeStud[3]) && catPoints.get(i) >= points) {
+                                            correctGrade = true;
+                                            break;
+                                        }
+                                    }
+                                break;    
+                                }
+                            }
+                            //grade student
+                            if (correctGrade) {
+                                for (Student st : this.students) {
+                                    if (gradeStud[1].equals(st.getFirstName() + " " + st.getLastName() + ", " + st.getIndex())) {
+                                        st.addPoints(chosenCourse, gradeStud[3], points);
+                                        System.out.println("Student graded");
+                                        break;
+                                    }
+                                    break;    
+                                }
+                            }
+                            //update info
+                            String studentNameIndex = gradeStud[1];
+                            for (Student st : this.students) {
+                                String studentsCourses = st.getCoursesInfo();
+                                if (studentsCourses.equals(""))
+                                    studentsCourses = "* No courses";
+                                if (studentNameIndex.equals(st.getFirstName() + " " + st.getLastName() + ", " + st.getIndex())) {
+                                    this.pw.println("Student info#Name: " + st.getFirstName() + " " + st.getLastName() + 
+                                            "#Index: " + st.getIndex() + "#JMBG: " + st.getJmbg() + "#Courses:#" + studentsCourses);
+                                }
+                            }
                         }
                     }
                     catch (IOException ex) {

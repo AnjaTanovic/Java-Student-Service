@@ -58,6 +58,7 @@ public class Client extends javax.swing.JFrame {
         labelNotCorrect.setVisible(false);
         
         labelStudents.setVisible(false);
+        labelStudentInfo.setVisible(false);
         labelCourses.setVisible(false);
         comboStudent.setVisible(false);
         comboCourse.setVisible(false);
@@ -91,16 +92,21 @@ public class Client extends javax.swing.JFrame {
                 buttonGradeStudent.setVisible(true);
                 buttonAddCourse.setVisible(true);
                 buttonAddAdmin.setVisible(true);
+                labelStudents.setVisible(true);
+                labelCourses.setVisible(true);
+                comboStudent.setVisible(true);
+                comboCourse.setVisible(true);
+                textStudent.setVisible(true);
+                textCourse.setVisible(true);
+                jScrollPane3.setVisible(true);
+                jScrollPane4.setVisible(true);
+            }
+            else {
+                labelStudentInfo.setVisible(true);
+                textStudent.setVisible(true);
+                jScrollPane3.setVisible(true);
             }
             
-            labelStudents.setVisible(true);
-            labelCourses.setVisible(true);
-            comboStudent.setVisible(true);
-            comboCourse.setVisible(true);
-            textStudent.setVisible(true);
-            textCourse.setVisible(true);
-            jScrollPane3.setVisible(true);
-            jScrollPane4.setVisible(true);
         }
         else
         {
@@ -165,6 +171,7 @@ public class Client extends javax.swing.JFrame {
         textCourse = new javax.swing.JTextArea();
         buttonStudentCourse = new javax.swing.JButton();
         buttonGradeStudent = new javax.swing.JButton();
+        labelStudentInfo = new javax.swing.JLabel();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -283,6 +290,9 @@ public class Client extends javax.swing.JFrame {
             }
         });
 
+        labelStudentInfo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelStudentInfo.setText("Student Info:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -314,13 +324,14 @@ public class Client extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(114, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(comboStudent, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(labelStudents, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonStudentCourse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonAddStudent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonGradeStudent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(labelStudentInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(comboStudent, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3)
+                    .addComponent(buttonStudentCourse, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonAddStudent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonGradeStudent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelStudents, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(comboCourse, 0, 227, Short.MAX_VALUE)
@@ -355,7 +366,9 @@ public class Client extends javax.swing.JFrame {
                 .addComponent(buttonLogIn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelNotCorrect)
-                .addGap(20, 20, 20)
+                .addGap(31, 31, 31)
+                .addComponent(labelStudentInfo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelCourses, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(labelStudents))
@@ -377,7 +390,7 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(buttonGradeStudent))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonAddStudent)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -606,8 +619,8 @@ public class Client extends javax.swing.JFrame {
     
     private void buttonAddAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddAdminActionPerformed
         
-        String newAdminUsername = JOptionPane.showInputDialog("Enter username for student's new account:");
-        String newAdminPassword = JOptionPane.showInputDialog("Enter password for student's new account:");
+        String newAdminUsername = JOptionPane.showInputDialog("Enter username for admin's new account:");
+        String newAdminPassword = JOptionPane.showInputDialog("Enter password for admin's new account:");
        
         if (!newAdminUsername.equals("") && !newAdminPassword.equals("")) {
             String message1 = "New admin";
@@ -616,7 +629,7 @@ public class Client extends javax.swing.JFrame {
             this.pw.println(message2);
         }
         else {
-            JOptionPane.showMessageDialog(null, "Student information is not complete! Try again.");
+            JOptionPane.showMessageDialog(null, "Admin information is not complete! Try again.");
         }
     }//GEN-LAST:event_buttonAddAdminActionPerformed
    
@@ -641,24 +654,75 @@ public class Client extends javax.swing.JFrame {
             String newCourse = JOptionPane.showInputDialog("Enter full name of the new course for student:");
 
             boolean correctName = false;
-            for (int i = 0; i < comboCourse.getItemCount(); i++) {
-                if (newCourse.equals(comboCourse.getItemAt(i).toString())) {
-                    correctName = true;
-                    break;
+            if (newCourse != null && !newCourse.equals("")) {
+                for (int i = 0; i < comboCourse.getItemCount(); i++) {
+                    if (newCourse.equals(comboCourse.getItemAt(i).toString())) {
+                        correctName = true;
+                        break;
+                    }
                 }
-            }
-            if (correctName) {
-                String message = "Add new Course:" + newCourse + ":for student:" + comboStudent.getSelectedItem().toString();
-                this.pw.println(message);
-            }
-            else {
-                JOptionPane.showMessageDialog(null, "Course \"" + newCourse + "\" does not exist! Try again.");
+                if (correctName) {
+                    String message = "Add new Course:" + newCourse + ":for student:" + comboStudent.getSelectedItem().toString();
+                    this.pw.println(message);
+                }
+                else if (newCourse != null) {
+                    JOptionPane.showMessageDialog(null, "Course \"" + newCourse + "\" does not exist! Try again.");
+                }
             }
         }
     }//GEN-LAST:event_buttonStudentCourseActionPerformed
 
     private void buttonGradeStudentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGradeStudentActionPerformed
-        // TODO add your handling code here:
+        if (comboStudent.getSelectedIndex() != -1) {
+            String courseToGrade = JOptionPane.showInputDialog("Enter full name of the course you want to grade the student on:");
+
+            if (courseToGrade != null && !courseToGrade.equals("")) {
+                boolean correctName = false;
+                boolean studentHasCourse = false;
+                for (int i = 0; i < comboCourse.getItemCount(); i++) {
+                    if (courseToGrade.equals(comboCourse.getItemAt(i).toString())) {
+                        correctName = true;
+                        break;
+                    }
+                }
+                //check if student is on that course
+                String studentInfo = "* " + textStudent.getText() + " ->";
+                if (studentInfo.contains(courseToGrade))
+                    studentHasCourse = true;
+                
+                if (correctName && studentHasCourse) {
+                    String categoryToGrade = JOptionPane.showInputDialog("Enter full name of the course category:");
+                    
+                    if (categoryToGrade != null && !categoryToGrade.equals("")) {
+                        //client doesnt know is category correct, server will know
+                        boolean pointsOk = false;
+                        String studentPoints = JOptionPane.showInputDialog("Enter the number of points student got in that category:");
+                        try {
+                            int points = Integer.parseInt(studentPoints);
+                            if (points < 1)
+                                JOptionPane.showMessageDialog(null, "Wrong format for points! Try again.");
+                            else pointsOk = true;
+                        }
+                        catch (NumberFormatException nfe) {
+                            JOptionPane.showMessageDialog(null, "Wrong format for points! Try again.");
+                        }
+                            
+                        if (pointsOk) {
+                            //client doesent know if points are correct (more than maximum for category) server will know
+                            String message = "Grade:" + comboStudent.getSelectedItem().toString() + ":" +
+                                    courseToGrade + ":" + categoryToGrade + ":" + studentPoints;
+                            this.pw.println(message);
+                        }
+                    }
+                }
+                else if (!correctName) {
+                    JOptionPane.showMessageDialog(null, "Course \"" + courseToGrade + "\" does not exist! Try again.");
+                }
+                else {                    
+                    JOptionPane.showMessageDialog(null, "Student is not on course \"" + courseToGrade + "\". Try again.");
+                }
+            }            
+        }
     }//GEN-LAST:event_buttonGradeStudentActionPerformed
 
     /**
@@ -719,6 +783,7 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JLabel labelNotCorrect;
     private javax.swing.JLabel labelPassword;
     private javax.swing.JLabel labelRole;
+    private javax.swing.JLabel labelStudentInfo;
     private javax.swing.JLabel labelStudents;
     private javax.swing.JLabel labelUsername;
     private javax.swing.JLabel labelWelcome;

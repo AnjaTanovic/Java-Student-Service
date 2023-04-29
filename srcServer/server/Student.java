@@ -78,6 +78,15 @@ public class Student {
         courses.add(new StudentsCourse(course));
     }
     
+    public ArrayList<String> getCourses() {
+        ArrayList<String> studentCourses = new ArrayList<>();
+        for (StudentsCourse course : courses) {
+            studentCourses.add(course.getCourse().getName());
+        }
+        
+        return studentCourses;
+    }
+    
     public void addPoints(Course course, String categoryName, int points) {
         
         for (StudentsCourse cr : courses) {
@@ -113,14 +122,14 @@ public class Student {
     public String getCoursesInfo() {
         String names = "";
         for (int i = 0; i < courses.size(); i++) {
-            names += courses.get(i).getCourse().getName() + " -> ";
+            names += "* " + courses.get(i).getCourse().getName() + " -> ";
                 for (int j = 0; j < courses.get(i).getCourse().getCategoriesNames().size(); j++) {
                     names += courses.get(i).getCourse().getCategoriesNames().get(j) + "-" 
-                            + courses.get(i).getCategoryPoints(j) + " ";
+                            + courses.get(i).getCategoryPoints(j) + ", ";
                 }
             names += "grade = " + courses.get(i).getGrade();
             if (i < courses.size() - 1) {
-                names += ", ";
+                names += ":";
             }
         }
         return names;
