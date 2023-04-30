@@ -2,10 +2,15 @@ package server;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -34,11 +39,19 @@ public class ServeConnectedClient implements Runnable {
     private String jmbg;
     private String index;
     
+    ObjectOutputStream outCourses;
+    ObjectOutputStream outStudents;
+    
+    ObjectInputStream inCourses;
+    ObjectInputStream inStudents;
+            
     private int clientState;
     //0 - signed in state, 1 - loged in state
     
-    private final String users_txt = "D:\\Anja\\FAKULTET\\Master\\Razvoj softvera za embeded operativne sisteme\\NetBeans\\Zadaci\\2\\Java-Student-Service\\srcServer\\server\\users.txt";
-    File users_file;
+    private final String usersTxt = "D:\\Anja\\FAKULTET\\Master\\Razvoj softvera za embeded operativne sisteme\\NetBeans\\Zadaci\\2\\Java-Student-Service\\srcServer\\server\\users.txt";
+    private final String coursesTxt = "D:\\Anja\\FAKULTET\\Master\\Razvoj softvera za embeded operativne sisteme\\NetBeans\\Zadaci\\2\\Java-Student-Service\\srcServer\\server\\courses.txt";
+    private final String studentsTxt = "D:\\Anja\\FAKULTET\\Master\\Razvoj softvera za embeded operativne sisteme\\NetBeans\\Zadaci\\2\\Java-Student-Service\\srcServer\\server\\students.txt";
+    File usersFile;
 
     public String getUserName() {
         return userName;
@@ -121,11 +134,37 @@ public class ServeConnectedClient implements Runnable {
         }
         
         //read file with users
-        users_file = new File(users_txt);
-        if (!users_file.exists() || !users_file.isFile()) {
+        usersFile = new File(usersTxt);
+        if (!usersFile.exists() || !usersFile.isFile()) {
                 System.out.println("File is not found.");
                 System.exit(1);
         }
+        
+        //load students
+        try {
+            inStudents = new ObjectInputStream(new FileInputStream(studentsTxt));
+            ArrayList<Student> sts = new ArrayList<>();
+            sts =(ArrayList<Student>) inStudents.readObject();
+            this.students = sts;
+            inStudents.close();
+        }catch (IOException ex) {
+            Logger.getLogger(ServeConnectedClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ServeConnectedClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        //load courses
+        try {
+            inCourses = new ObjectInputStream(new FileInputStream(coursesTxt));
+            ArrayList<Course> crs = new ArrayList<>();
+            crs =(ArrayList<Course>) inCourses.readObject();
+            this.courses = crs;
+            inCourses.close();
+        }catch (IOException ex) {
+            Logger.getLogger(ServeConnectedClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ServeConnectedClient.class.getName()).log(Level.SEVERE, null, ex);
+        }   
     }
     
     @Override
@@ -146,7 +185,7 @@ public class ServeConnectedClient implements Runnable {
                         {
                             //read user txt document
                             String readString;
-                            BufferedReader usersBr = new BufferedReader(new FileReader(users_txt));
+                            BufferedReader usersBr = new BufferedReader(new FileReader(usersTxt));
                             while ((readString = usersBr.readLine()) != null) {
                                 String[] userPassRoleTxt = readString.split(":");
                                 if (userPassRoleTxt.length != 3) {
@@ -198,6 +237,8 @@ public class ServeConnectedClient implements Runnable {
                     }
                     catch (IOException ex) {
                         System.out.println("Disconnected user.");
+                        saveCourses();
+                        saveStudents();
                         return;
                     }
                     break;
@@ -273,7 +314,7 @@ public class ServeConnectedClient implements Runnable {
                                 //write users in file
                                 String newFileInfo = studentInfo[4] + ":" + studentInfo[5] + ":" + "student";
                                 try {
-                                    PrintWriter usersPw = new PrintWriter(new FileWriter(users_txt,true));
+                                    PrintWriter usersPw = new PrintWriter(new FileWriter(usersTxt,true));
                                     usersPw.println(newFileInfo);
                                     usersPw.close();
                                 } 
@@ -298,7 +339,7 @@ public class ServeConnectedClient implements Runnable {
                             //check if user with the same username exists
                             boolean ok = true;
                             String readString;
-                            BufferedReader usersBr = new BufferedReader(new FileReader(users_txt));
+                            BufferedReader usersBr = new BufferedReader(new FileReader(usersTxt));
                             while ((readString = usersBr.readLine()) != null) {
                                 String[] readAdmin = readString.split(":");
                                 if (newAdminUsername.equals(readAdmin[0])) {
@@ -311,7 +352,7 @@ public class ServeConnectedClient implements Runnable {
                             //write users in file
                             if (ok) {
                                 try {
-                                    PrintWriter usersPw = new PrintWriter(new FileWriter(users_txt,true));
+                                    PrintWriter usersPw = new PrintWriter(new FileWriter(usersTxt,true));
                                     usersPw.println(newFileInfo);
                                     usersPw.close();
                                 } 
@@ -517,8 +558,7 @@ public class ServeConnectedClient implements Runnable {
                                         st.addPoints(chosenCourse, gradeStud[3], points);
                                         System.out.println("Student graded");
                                         break;
-                                    }
-                                    break;    
+                                    }   
                                 }
                             }
                             else {
@@ -539,9 +579,14 @@ public class ServeConnectedClient implements Runnable {
                                 }
                             }
                         }
+                        else if (clientMess.equals("Logout")) {
+                            clientState = 3;
+                        }
                     }
                     catch (IOException ex) {
                         System.out.println("Disconnected user.");
+                        saveCourses();
+                        saveStudents();
                         return;
                     }
                     break;
@@ -570,19 +615,52 @@ public class ServeConnectedClient implements Runnable {
                                 }
                             }
                         }
+                        else if (clientMess.equals("Logout")) {
+                            clientState = 3;
+                        }
                     }
                     catch (IOException ex) {
                         System.out.println("Disconnected user.");
+                        saveCourses();  
+                        saveStudents();
                         return;
                     }
                     break;
+                case 3:
+                    saveCourses();
+                    saveStudents();
+                    return;
                 default:
                     break;
             }
         }
     }
     
-    void updateClientStatus() {
-     
+    void saveStudents() {
+        //serialization
+        try {
+            outStudents = new ObjectOutputStream(new FileOutputStream(studentsTxt));
+            outStudents.writeObject(this.students);
+            outStudents.close();
+        } catch (FileNotFoundException ex1) {
+            Logger.getLogger(ServeConnectedClient.class.getName()).log(Level.SEVERE, null, ex1);
+        } catch (IOException ex1) {
+            Logger.getLogger(ServeConnectedClient.class.getName()).log(Level.SEVERE, null, ex1);
+        }
+        System.out.println("Students saved.");
+    }
+    
+    void saveCourses() {
+        //serialization
+        try {
+            outCourses = new ObjectOutputStream(new FileOutputStream(coursesTxt));
+            outCourses.writeObject(this.courses);
+            outCourses.close();
+        } catch (FileNotFoundException ex1) {
+            Logger.getLogger(ServeConnectedClient.class.getName()).log(Level.SEVERE, null, ex1);
+        } catch (IOException ex1) {
+            Logger.getLogger(ServeConnectedClient.class.getName()).log(Level.SEVERE, null, ex1);
+        }
+        System.out.println("Courses saved.");
     }
 }

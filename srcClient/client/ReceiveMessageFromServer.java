@@ -60,8 +60,8 @@ public class ReceiveMessageFromServer implements Runnable{
                     }
                     catch (IOException ex) {
                         System.out.println("Server not available.");
-                        parent.printMess("Server is not available anymore!");
-                        System.out.println("BACK TO SIGN IN PAGE");
+                        parent.printMess("Disconnected from server!");
+                        parent.logout();
                         return;
                     }
                     break;
@@ -113,11 +113,14 @@ public class ReceiveMessageFromServer implements Runnable{
                             String[] mess = serverMessage.split(":");
                             parent.printMess(mess[1]);
                         }
+                        else if (serverMessage.equals("Logout")) {
+                            clientState = 3;
+                        }
                     }
                     catch (IOException ex) {
                         System.out.println("Server not available.");
-                        parent.printMess("Server is not available anymore!");
-                        System.out.println("BACK TO SIGN IN PAGE");
+                        parent.printMess("Disconnected from server!");
+                        parent.logout();
                         return;
                     }
                     break;
@@ -143,14 +146,19 @@ public class ReceiveMessageFromServer implements Runnable{
                             String[] mess = serverMessage.split(":");
                             parent.printMess(mess[1]);
                         }
+                        else if (serverMessage.equals("Logout")) {
+                            clientState = 3;
+                        }
                     }
                     catch (IOException ex) {
                         System.out.println("Server not available.");
-                        parent.printMess("Server is not available anymore!");
-                        System.out.println("BACK TO SIGN IN PAGE");
+                        parent.printMess("Disconnected from server!");
+                        parent.logout();
                         return;
                     }
                     break;
+                case 3: 
+                    return;
                 default:
                     break;
             }

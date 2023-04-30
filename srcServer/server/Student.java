@@ -1,12 +1,13 @@
 package server;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author Anja Tanovic
  */
-public class Student {
+public class Student implements Serializable {
     
     private String userName;
     private String password;

@@ -174,6 +174,54 @@ public class Client extends javax.swing.JFrame {
     public void printMess(String mess) {
         JOptionPane.showMessageDialog(null, mess);
     }
+    
+    public void logout() {
+        try {
+            this.socket.close();
+        } 
+        catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.userName = "";
+        this.role = "";
+
+        buttonSignIn.setVisible(true);
+        labelWelcome.setVisible(true);
+        labelNoConnection.setVisible(true);
+
+        labelNoConnection.setVisible(false);
+        labelRole.setVisible(false);
+        labelUsername.setVisible(false);
+        labelPassword.setVisible(false);
+        comboRole.setVisible(false);
+        textUsername.setVisible(false);
+        textPassword.setVisible(false);
+        buttonLogIn.setVisible(false);
+        labelNotCorrect.setVisible(false);
+
+        labelStudents.setVisible(false);
+        labelStudentInfo.setVisible(false);
+        labelCourses.setVisible(false);
+        comboStudent.setVisible(false);
+        comboCourse.setVisible(false);
+        textStudent.setVisible(false);
+        textStudent.setEditable(false);
+        textCourse.setVisible(false);
+        textCourse.setEditable(false);
+        jScrollPane3.setVisible(false);
+        jScrollPane4.setVisible(false);
+        buttonAddStudent.setVisible(false);
+        buttonStudentCourse.setVisible(false);
+        buttonGradeStudent.setVisible(false);
+        buttonAddCourse.setVisible(false);
+        buttonAddAdmin.setVisible(false); 
+        buttonLogOut.setVisible(false);
+
+        textStudent.setText("");
+        textCourse.setText("");
+        comboStudent.removeAllItems();
+        comboCourse.removeAllItems();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -792,7 +840,68 @@ public class Client extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonGradeStudentActionPerformed
 
     private void buttonLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLogOutActionPerformed
-        // TODO add your handling code here:
+        
+        int rememberPass = JOptionPane.showConfirmDialog(null, "Do you want to remember username and password?", 
+                "Select an Option", JOptionPane.YES_NO_CANCEL_OPTION);
+        //0 yes, 1 no, 2 cancel
+        
+        if (rememberPass == 0 || rememberPass == 1) {
+            
+            pw.println("Logout");
+            
+            try {
+                this.socket.close();
+            } 
+            catch (IOException ex) {
+                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            this.userName = "";
+            this.role = "";
+        
+            buttonSignIn.setVisible(true);
+            labelWelcome.setVisible(true);
+            labelNoConnection.setVisible(true);
+
+            labelNoConnection.setVisible(false);
+            labelRole.setVisible(false);
+            labelUsername.setVisible(false);
+            labelPassword.setVisible(false);
+            comboRole.setVisible(false);
+            textUsername.setVisible(false);
+            textPassword.setVisible(false);
+            buttonLogIn.setVisible(false);
+            labelNotCorrect.setVisible(false);
+
+            labelStudents.setVisible(false);
+            labelStudentInfo.setVisible(false);
+            labelCourses.setVisible(false);
+            comboStudent.setVisible(false);
+            comboCourse.setVisible(false);
+            textStudent.setVisible(false);
+            textStudent.setEditable(false);
+            textCourse.setVisible(false);
+            textCourse.setEditable(false);
+            jScrollPane3.setVisible(false);
+            jScrollPane4.setVisible(false);
+            buttonAddStudent.setVisible(false);
+            buttonStudentCourse.setVisible(false);
+            buttonGradeStudent.setVisible(false);
+            buttonAddCourse.setVisible(false);
+            buttonAddAdmin.setVisible(false); 
+            buttonLogOut.setVisible(false);
+        
+            textStudent.setText("");
+            textCourse.setText("");
+            comboStudent.removeAllItems();
+            comboCourse.removeAllItems();
+            
+            if (rememberPass == 1) {
+                textUsername.setText("");
+                textPassword.setText("");
+                comboRole.setSelectedIndex(0);
+            }
+            
+        }        
     }//GEN-LAST:event_buttonLogOutActionPerformed
 
     /**

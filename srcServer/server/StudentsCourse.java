@@ -1,12 +1,13 @@
 package server;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author Anja Tanovic
  */
-public class StudentsCourse {
+public class StudentsCourse implements Serializable{
     
     private Course course;
     private int [] categoriesPoints;
