@@ -2,14 +2,12 @@ package server;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -41,9 +39,6 @@ public class ServeConnectedClient implements Runnable {
     
     ObjectOutputStream outCourses;
     ObjectOutputStream outStudents;
-    
-    ObjectInputStream inCourses;
-    ObjectInputStream inStudents;
             
     private int clientState;
     //0 - signed in state, 1 - loged in state
@@ -138,33 +133,7 @@ public class ServeConnectedClient implements Runnable {
         if (!usersFile.exists() || !usersFile.isFile()) {
                 System.out.println("File is not found.");
                 System.exit(1);
-        }
-        
-        //load students
-        try {
-            inStudents = new ObjectInputStream(new FileInputStream(studentsTxt));
-            ArrayList<Student> sts = new ArrayList<>();
-            sts =(ArrayList<Student>) inStudents.readObject();
-            this.students = sts;
-            inStudents.close();
-        }catch (IOException ex) {
-            Logger.getLogger(ServeConnectedClient.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ServeConnectedClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        //load courses
-        try {
-            inCourses = new ObjectInputStream(new FileInputStream(coursesTxt));
-            ArrayList<Course> crs = new ArrayList<>();
-            crs =(ArrayList<Course>) inCourses.readObject();
-            this.courses = crs;
-            inCourses.close();
-        }catch (IOException ex) {
-            Logger.getLogger(ServeConnectedClient.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ServeConnectedClient.class.getName()).log(Level.SEVERE, null, ex);
-        }   
+        }  
     }
     
     @Override
@@ -231,7 +200,6 @@ public class ServeConnectedClient implements Runnable {
                             usersBr.close();
                             if (clientState == 0) {
                                 this.pw.println("Not correct");
-                                System.out.println("Not correct password.");
                             }
                         }
                     }
@@ -489,20 +457,16 @@ public class ServeConnectedClient implements Runnable {
                                         if (courseStudent[1].equals(cr.getName())) {
                                             //check if this course is already in students courses
                                             ArrayList<String> studCourses = st.getCourses();
-                                            System.out.println(studCourses);
                                             if (studCourses.isEmpty()) {
                                                     st.addCourse(cr);
-                                                    System.out.println("New course for student");
                                                 }
                                                 
                                             for (int i = 0; i < studCourses.size(); i++) {
                                                 if (studCourses.get(i).equals(courseStudent[1])) {
-                                                    System.out.println("Course already in students courses");
                                                     break;
                                                 }
                                                 if (i == studCourses.size() - 1) {
                                                     st.addCourse(cr);
-                                                    System.out.println("New course for student");
                                                 }
                                             }
                                             break;
@@ -556,7 +520,6 @@ public class ServeConnectedClient implements Runnable {
                                 for (Student st : this.students) {
                                     if (gradeStud[1].equals(st.getFirstName() + " " + st.getLastName() + ", " + st.getIndex())) {
                                         st.addPoints(chosenCourse, gradeStud[3], points);
-                                        System.out.println("Student graded");
                                         break;
                                     }   
                                 }

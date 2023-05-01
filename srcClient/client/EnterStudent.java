@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package client;
 
 import javax.swing.JFrame;
@@ -9,11 +5,12 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author anjat
+ * @author Anja Tanovic
  */
 public class EnterStudent extends javax.swing.JFrame {
 
     Client client;
+    
     /**
      * Creates new form EnterStudent
      * @param client
