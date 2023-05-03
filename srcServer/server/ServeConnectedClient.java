@@ -236,13 +236,13 @@ public class ServeConnectedClient implements Runnable {
                                 String[] index22 = studentInfo[2].split("-");
                                 if (index11.length == 2) {
                                     if (index21.length == 2) {
-                                        if (index11[0].equals(index21[0]) && index11[1].equals(index21[1])) {
+                                        if (index11[0].equalsIgnoreCase(index21[0]) && index11[1].equalsIgnoreCase(index21[1])) {
                                             ok = false;
                                             break;
                                         }
                                     }
                                     else {
-                                        if (index11[0].equals(index22[0]) && index11[1].equals(index22[1])) {
+                                        if (index11[0].equalsIgnoreCase(index22[0]) && index11[1].equalsIgnoreCase(index22[1])) {
                                             ok = false;
                                             break;
                                         }
@@ -250,13 +250,13 @@ public class ServeConnectedClient implements Runnable {
                                 }
                                 else {
                                     if (index21.length == 2) {
-                                        if (index12[0].equals(index21[0]) && index12[1].equals(index21[1])) {
+                                        if (index12[0].equalsIgnoreCase(index21[0]) && index12[1].equalsIgnoreCase(index21[1])) {
                                             ok = false;
                                             break;
                                         }
                                     }
                                     else {
-                                        if (index12[0].equals(index22[0]) && index12[1].equals(index22[1])) {
+                                        if (index12[0].equalsIgnoreCase(index22[0]) && index12[1].equalsIgnoreCase(index22[1])) {
                                             ok = false;
                                             break;
                                         }

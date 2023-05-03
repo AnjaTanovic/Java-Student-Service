@@ -42,7 +42,6 @@ public class ServerTerminate implements Runnable {
             }
             else {
                 System.out.println("Only possible input for server is exit command.");
-                System.out.println(students.size());
             }
         }
     }
